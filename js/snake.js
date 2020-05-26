@@ -1,8 +1,6 @@
 const cvs = document.querySelector('#snake');
 const context = cvs.getContext('2d');
 
-
-
 //imgs
 let backgroundImg = new Image();
 backgroundImg.src = "img/ground.png";
@@ -49,35 +47,31 @@ let score = 0;
 //control
 let d;
 
-
-
+let lastDirection = null;
 
 document.addEventListener('keydown', direction);
-
 
 function direction(event) {
   let key = event.keyCode;
 
-  if(key == 37 && d != "RIGHT"){
+  if(key == 37 && lastDirection != "RIGHT"){
     left.play(); 
     d = "LEFT";
 
   }
-  else if(key == 38 && d != "DOWN") {
+  else if(key == 38 && lastDirection != "DOWN") {
     up.play(); 
     d = "UP";
   }
-  else if (key == 39 && d != "LEFT") {
+  else if (key == 39 && lastDirection != "LEFT") {
     right.play(); 
     d = "RIGHT";
   }
-  else if (key == 40 && d != "UP") {
+  else if (key == 40 && lastDirection != "UP") {
     down.play(); 
     d = "DOWN";
   }
 }
-
-
 
 //mobile
 let btnRight = document.querySelector('.btnRight');
@@ -106,11 +100,6 @@ btnUp.addEventListener('click', function(){
   d = "UP";
 });
 
-
-
-
-
-
 //check COLISAO
 function collision(head, array) {
   for(let i = 0; i < array.length; i++){
@@ -120,8 +109,6 @@ function collision(head, array) {
   }
   return false;
 }
-
-
 
 //Desenha Tudo
 function draw() {
@@ -151,9 +138,7 @@ function draw() {
   if( d == "RIGHT") snakeX += box;
   if( d == "DOWN") snakeY += box;
   
-
-
-
+  lastDirection = d;
 
   //eats the food
   if(snakeX == food.x && snakeY == food.y){
@@ -189,11 +174,6 @@ function draw() {
   context.font = "45px Helvetica";
   context.fillText(score, 4*box,2*box);
 
-  
-
-
 }
-
-
 
 let game = setInterval(draw, 150);
