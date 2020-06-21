@@ -8,11 +8,9 @@ backgroundImg.src = "img/ground.png";
 let foodImg = new Image();
 foodImg.src = "img/food.png";
 
-//unidade (tamanho do quadrado dentro do canvas)
-const box = 22;
+const squareSize = 22;
 
-//sons
-// load audio files
+// Loads audio files
 const dead = new Audio();
 const eat = new Audio();
 const up = new Audio();
@@ -27,17 +25,15 @@ left.src = "audio/left.mp3";
 right.src = "audio/right.mp3";
 down.src = "audio/down.mp3";
 
-//snake
 let snake = [];
 snake[0] = {
-  x: 12*box,
-  y: 10*box 
+  x: 12,
+  y: 10 
 };
 
-// let food   
 let food = {
-  x: Math.floor (Math.random()*15+1)*box,
-  y: Math.floor (Math.random()*12+3)*box
+  x: Math.floor (Math.random()*15+1),
+  y: Math.floor (Math.random()*12+3)
 }
 
 //score
@@ -116,16 +112,21 @@ function draw() {
 
   //desenhando snake
   for(let i = 0; i < snake.length; i++) {
+    x = snake[i].x * squareSize
+    y = snake[i].y * squareSize
+
     context.fillStyle = (i == 0) ? "#fff" : "#7D86E3";
-    context.fillRect(snake[i].x, snake[i].y, box,box); 
+    //Draws snake block
+    context.fillRect(x, y, squareSize, squareSize); 
 
     context.strokeStyle = "red";
-    context.strokeRect(snake[i].x, snake[i].y, box, box);
+    context.strokeRect(x, y, squareSize, squareSize);
   }
 
   //desenha comida
-  context.drawImage(foodImg, food.x, food.y);
-
+  foodX = food.x * squareSize
+  foodY = food.y * squareSize
+  context.drawImage(foodImg, foodX, foodY);
 
   //posicao antiga da cabeca
   let snakeX = snake[0].x;
@@ -133,10 +134,10 @@ function draw() {
 
   
   //direction
-  if( d == "LEFT") snakeX -= box;
-  if( d == "UP") snakeY -= box;
-  if( d == "RIGHT") snakeX += box;
-  if( d == "DOWN") snakeY += box;
+  if( d == "LEFT") snakeX -= 1;
+  if( d == "UP") snakeY -= 1;
+  if( d == "RIGHT") snakeX += 1;
+  if( d == "DOWN") snakeY += 1;
   
   lastDirection = d;
 
@@ -146,34 +147,33 @@ function draw() {
     score++;
     //reposition apple
     food = {
-      x: Math.floor (Math.random()*15+1)*box,
-      y: Math.floor (Math.random()*12+3)*box
+      x: Math.floor (Math.random()*15+1),
+      y: Math.floor (Math.random()*12+3)
     }
   }else{
      //remove rastro
     snake.pop();
   }
-   //add new Head 
-   let newHead = {
+  
+  let newHead = {
     x: snakeX,
     y: snakeY
   }
 
   //game over
-  if(snakeX < box || snakeX > 16 * box || snakeY < 3*box || snakeY > 16*box || collision(newHead, snake)) {
+  if(snakeX > 16 || snakeY > 16 || snakeX < 1 || snakeY < 3 || collision(newHead, snake)) {
     clearInterval(game);
     dead.play();
   }
 
 
-  //aumenta
+  // Increase snake size
   snake.unshift(newHead);
 
-  //texto
+  // Text
   context.fillStyle = "white";
   context.font = "45px Helvetica";
-  context.fillText(score, 4*box,2*box);
-
+  context.fillText(score, 4*squareSize,2*squareSize);
 }
 
 let game = setInterval(draw, 150);
